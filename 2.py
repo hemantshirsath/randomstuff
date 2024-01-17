@@ -59,3 +59,31 @@ result = covid_data.groupby('Country/Region').max().sort_values(by='Confirmed',
 ascending=False)[:10]
 pd.set_option('display.max_column', None)
 print(result)
+
+
+
+
+# 6 Write a Python program to visualize Worldwide Confirmed Novel Coronavirus (COVID-19) cases over
+# time.
+
+import pandas as pd
+import plotly.express as px
+import plotly.io as pio
+
+pio.templates.default = "plotly_dark"
+
+# Read the dataset
+covid_data = pd.read_csv('/content/dataset.csv')
+
+# Convert 'Date' column to datetime format
+covid_data['Date'] = pd.to_datetime(covid_data['Date'], format='%d-%m-%Y')
+
+# Group by 'Date' and sum the 'Confirmed' and 'Deaths'
+grouped = covid_data.groupby('Date')[['Date', 'Confirmed', 'Deaths']].sum().reset_index()
+
+# Create the line plot
+fig = px.line(grouped, x="Date", y="Confirmed",
+              title="Worldwide Confirmed Novel Coronavirus(COVID-19) Cases Over Time")
+
+# Show the plot
+fig.show()
