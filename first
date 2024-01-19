@@ -1,0 +1,33 @@
+first.l %
+{
+#include <math.h>
+    FILE *fp;
+    %
+}
+digit[0 - 9] +
+        word[a - z] + [a - z0 - 9] * terminator ";" bracket1[\t] * "{"[\t] * bracket2[\t] * "}"[\t] * main_function "void main()" inbuilt[\t] * "printf(".*")" |
+    [\t] * "scanf(".*")" | [\t] * "clrscr()" \n datatype[\t] * "int" | [\t] * "float" | [\t] * "char" relational[\t] * "<" | ">" | "<=" | ">=" | "!=" | "==" logical[\t] * "&&" | [\t] * "||" header "#include<"[a - z] + ".h" > "
+                                                                                                                                                                                                                                     operator"+" | "-" | "*" | "/" comment[\t] * "/*".*"*/"[\t] * \n %
+                                                                                                                                                                                                                                     %
+{
+    bracket1
+}
+{
+    printf("Opening Bracket %s", yytext);
+}
+% %
+    int main(int argc, char *argv[])
+{
+    fp = fopen(argv[1], "r");
+    if (fp != NULL)
+    {
+        yyin = fp;
+        yylex();
+    }
+    return 0;
+}
+lex first.l
+        cc lex.yy.c -
+    ll
+            ./
+        a.out input.txt

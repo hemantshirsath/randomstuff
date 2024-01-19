@@ -1,0 +1,41 @@
+second.l %
+{
+#include <math.h>
+    FILE *fp;
+    %
+}
+binary[0 - 1] +
+    octal[0 - 7] +
+    decimal[0 - 9] +
+    hexadecimal[0 - 9A - F] +
+    positive[+]
+    ? [1 - 9][0 - 9] *
+          negative[-]
+    ? [1 - 9][0 - 9] *
+          positivef[+]
+    ? [1 - 9][0 - 9] *\.[0 - 9] +
+          negativef[-]
+    ? [1 - 9][0 - 9] *\.[0 - 9] +
+          % %
+{
+    binary
+}
+{
+    printf("Binary Number %s", yytext);
+}
+% %
+    int main(int argc, char *argv[])
+{
+    fp = fopen(argv[1], "r");
+    if (fp != NULL)
+    {
+        yyin = fp;
+        yylex();
+    }
+    return 0;
+}
+lex second.l
+        cc lex.yy.c -
+    ll
+            ./
+        a.out input.txt
